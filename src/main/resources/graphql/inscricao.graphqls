@@ -1,0 +1,6 @@
+type Inscricao {
+    idInscricao: ID!
+    participante: User
+    evento: Evento
+    statusInscricao: String!
+}

@@ -1,0 +1,37 @@
+extend type Query {
+    getAllUsers: [UserDTO!]
+}
+
+extend type Mutation {
+    createUser(data: UserCreateDTO!): UserDTO!
+}
+
+
+enum UserRole {
+    ORGANIZADOR
+    PARTICIPANTE
+}
+
+input UserCreateDTO {
+    nome: String!
+    email: String!
+    senha: String!
+    userRole: UserRole!
+}
+
+type UserDTO{
+    idUser: ID!
+    nome: String!
+    email: String!
+    senha: String!
+    userRole: UserRole!
+    ativo: Boolean!
+    eventos: [Evento]
+}
+
+type User {
+    idUser: ID!
+    nome: String!
+    email: String!
+    ativo: Boolean!
+}

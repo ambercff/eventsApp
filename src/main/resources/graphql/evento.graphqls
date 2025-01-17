@@ -1,0 +1,36 @@
+extend type Query {
+    getAllEvents: [EventoDTO!]
+}
+
+extend type Mutation {
+    createEvent(data: EventoCreateDTO!): EventoDTO!
+}
+
+input EventoCreateDTO {
+    titulo: String!
+    descricao: String!
+    data: String!
+    local: String!
+    capacidadeMaxima: Int!
+}
+
+type EventoDTO{
+    idEvento: ID!
+    titulo: String!
+    descricao: String!
+    data: String!
+    local: String!
+    capacidadeMaxima: Int!
+    organizadores: [User]
+}
+
+type Evento {
+    idEvento: ID!
+    titulo: String!
+    descricao: String!
+    data: String!
+    local: String!
+    capacidadeMaxima: Int!
+    organizadores: [User]
+    inscricoes: [Inscricao]
+}
