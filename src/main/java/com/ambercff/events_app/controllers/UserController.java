@@ -18,25 +18,7 @@ import java.util.List;
 @Slf4j
 public class UserController {
     @Autowired
-    UserCreateService userCreateService;
-
-    @Autowired
     UserGetAllService userGetAllService;
-
-    @MutationMapping
-    public UserDTO createUser(@Argument UserCreateDTO data){
-        final var user = userCreateService.createUser(data);
-
-        return UserDTO.builder()
-                .idUser(user.getIdUser())
-                .nome(user.getNome())
-                .email(user.getEmail())
-                .senha(user.getSenha())
-                .userRole(user.getUserRole())
-                .ativo(user.getAtivo())
-                .eventos(user.getEventos()).build();
-
-    }
 
     @QueryMapping
     public List<UserDTO> getAllUsers(){

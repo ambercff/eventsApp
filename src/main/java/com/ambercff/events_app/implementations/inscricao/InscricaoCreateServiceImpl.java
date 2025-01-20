@@ -2,7 +2,9 @@ package com.ambercff.events_app.implementations.inscricao;
 
 import com.ambercff.events_app.dtos.inscricao.InscricaoCreateDTO;
 import com.ambercff.events_app.infra.exceptions.EventNotFoundException;
+import com.ambercff.events_app.infra.exceptions.UserNotFoundException;
 import com.ambercff.events_app.models.Inscricao;
+import com.ambercff.events_app.models.User;
 import com.ambercff.events_app.models.enums.StatusInscricao;
 import com.ambercff.events_app.repositories.EventoRepository;
 import com.ambercff.events_app.repositories.InscricaoRepository;
@@ -26,7 +28,7 @@ public class InscricaoCreateServiceImpl implements InscricaoCreateService {
     public Inscricao createInscription(InscricaoCreateDTO data) {
         return inscricaoRepository.save(
                 Inscricao.builder()
-                        .participante(userRepository.findByEmail(data.email()))
+                        .participante((User) userRepository.findByEmail(data.email()).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!")))
                         .evento(eventoRepository.findById(data.idEvento()).orElseThrow(() -> new EventNotFoundException("Evento não encontrado!")))
                         .statusInscricao(StatusInscricao.CONFIRMADA).build()
 

@@ -1,0 +1,13 @@
+extend type Mutation {
+    login(data: AuthInputDTO!): TokenDTO!
+    register(data: UserCreateDTO!): UserDTO!
+}
+
+input AuthInputDTO {
+    email: String!
+    senha: String!
+}
+
+type TokenDTO {
+    token: String!
+}

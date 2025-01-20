@@ -2,11 +2,6 @@ extend type Query {
     getAllUsers: [UserDTO!]
 }
 
-extend type Mutation {
-    createUser(data: UserCreateDTO!): UserDTO!
-}
-
-
 enum UserRole {
     ORGANIZADOR
     PARTICIPANTE

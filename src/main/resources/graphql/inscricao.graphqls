@@ -1,6 +1,31 @@
+extend type Query {
+    getAllInscriptions: [InscricaoDTO!]
+}
+
+extend type Mutation {
+    createInscription(data: InscricaoCreateDTO!): InscricaoDTO!
+}
+
+input InscricaoCreateDTO {
+    email: String!
+    idEvento: Int!
+}
+
+type InscricaoDTO {
+    idInscricao: ID!
+    participante: User!
+    evento: Evento!
+    statusInscricao: StatusInscricao!
+}
+
+enum StatusInscricao {
+    CONFIRMADA
+    CANCELADA
+}
+
 type Inscricao {
     idInscricao: ID!
-    participante: User
-    evento: Evento
-    statusInscricao: String!
+    participante: User!
+    evento: Evento!
+    statusInscricao: StatusInscricao!
 }
