@@ -1,11 +1,13 @@
 package com.ambercff.events_app.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -17,19 +19,28 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
-    @Autowired
-    private SecurityFilter securityFilter;
+    @Bean
+    public SecurityFilter securityFilter(){
+        return new SecurityFilter();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception  {
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeHttpRequests(req -> {
-                    req.requestMatchers(HttpMethod.GET, "/graphiql/**").permitAll();
-                    req.requestMatchers(HttpMethod.POST, "/graphql/**").authenticated();
-                }).build();
+        return httpSecurity
+                .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .build();
+    }
+
+    @Bean
+    public FilterRegistrationBean<SecurityFilter> securityRegistrationBean(){
+        FilterRegistrationBean<SecurityFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(securityFilter());
+        registrationBean.addUrlPatterns("/graphql");
+        registrationBean.addUrlPatterns("/graphiql");
+        return registrationBean;
     }
 
     @Bean

@@ -27,7 +27,16 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        RequestWrapper requestWrapper = new RequestWrapper(request);
+        String body = requestWrapper.getBody();
+
         try {
+
+            if(body.contains("login") || body.contains("register")){
+                filterChain.doFilter(requestWrapper, response);
+                return;
+            }
+
             String token = getToken(request);
 
             if(token != null){
@@ -39,9 +48,10 @@ public class SecurityFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(
                         new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities())
                 );
-
+            } else {
+                throw new InvalidTokenException("Token inválido!");
             }
-            filterChain.doFilter(request, response);
+            filterChain.doFilter(requestWrapper, response);
         } catch(InvalidTokenException e){
             handleException(response, HttpServletResponse.SC_UNAUTHORIZED, "Token inválido!", "INVALID_TOKEN", e);
         } catch (UserNotFoundException e){
