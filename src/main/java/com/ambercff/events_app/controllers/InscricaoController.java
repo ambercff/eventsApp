@@ -56,7 +56,6 @@ public class InscricaoController {
     @MutationMapping
     public List<InscricaoDTO> getAllInscriptionsByUser(@Argument String email){
         final List<Inscricao> inscriptions = inscricaoGetAllByUserService.getAllInscriptionsByUser(email);
-
         return inscriptions.stream().map(inscricao -> InscricaoDTO.builder()
                 .idInscricao(inscricao.getIdInscricao())
                 .participante(inscricao.getParticipante())
