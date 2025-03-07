@@ -29,10 +29,11 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         RequestWrapper requestWrapper = new RequestWrapper(request);
         String body = requestWrapper.getBody();
+        String requestUri = request.getRequestURI();
 
         try {
 
-            if(body.contains("login") || body.contains("register")){
+            if(requestUri.contains("graphql") ||requestUri.contains("graphiql") ||body.contains("login") || body.contains("register")){
                 filterChain.doFilter(requestWrapper, response);
                 return;
             }

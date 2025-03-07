@@ -4,6 +4,8 @@ extend type Query {
 
 extend type Mutation {
     createEvent(data: EventoCreateDTO!): EventoDTO!
+    deleteEvent(idEvento: ID!): String!
+    setOrganizer(email: String!, titulo: String!): String!
 }
 
 input EventoCreateDTO {

@@ -3,6 +3,7 @@ package com.ambercff.events_app.controllers;
 import com.ambercff.events_app.dtos.inscricao.InscricaoCreateDTO;
 import com.ambercff.events_app.dtos.inscricao.InscricaoDTO;
 import com.ambercff.events_app.models.Inscricao;
+import com.ambercff.events_app.services.inscricao.InscricaoCancelService;
 import com.ambercff.events_app.services.inscricao.InscricaoCreateService;
 import com.ambercff.events_app.services.inscricao.InscricaoGetAllByUserService;
 import com.ambercff.events_app.services.inscricao.InscricaoGetAllService;
@@ -27,6 +28,9 @@ public class InscricaoController {
 
     @Autowired
     InscricaoGetAllByUserService inscricaoGetAllByUserService;
+
+    @Autowired
+    InscricaoCancelService inscricaoCancelService;
 
     @MutationMapping
     public InscricaoDTO createInscription(@Argument @Valid InscricaoCreateDTO data){
@@ -63,6 +67,11 @@ public class InscricaoController {
                 .statusInscricao(inscricao.getStatusInscricao())
                 .build()
         ).toList();
+    }
+
+    @MutationMapping
+    public String cancelInscription(@Argument Long idInscricao){
+        return inscricaoCancelService.cancelInscription(idInscricao);
     }
 }
 

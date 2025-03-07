@@ -1,9 +1,6 @@
 package com.ambercff.events_app.infra;
 
-import com.ambercff.events_app.infra.exceptions.EventNotFoundException;
-import com.ambercff.events_app.infra.exceptions.InvalidTokenException;
-import com.ambercff.events_app.infra.exceptions.UserAlreadyExistsException;
-import com.ambercff.events_app.infra.exceptions.UserNotFoundException;
+import com.ambercff.events_app.infra.exceptions.*;
 import graphql.ErrorType;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
@@ -47,6 +44,24 @@ public class CustomGraphQLExceptionResolver implements DataFetcherExceptionResol
             ));
         }
         if(exception instanceof UserAlreadyExistsException e){
+            return Mono.just(List.of(
+                    GraphqlErrorBuilder.newError(environment)
+                            .message(e.getMessage())
+                            .errorType(org.springframework.graphql.execution.ErrorType.FORBIDDEN)
+                            .extensions(Map.of("code", e.getCode())).build()
+            ));
+        }
+
+        if(exception instanceof InscriptionNotFoundException e){
+            return Mono.just(List.of(
+                    GraphqlErrorBuilder.newError(environment)
+                            .message(e.getMessage())
+                            .errorType(ErrorType.DataFetchingException)
+                            .extensions(Map.of("code", e.getCode())).build()
+            ));
+        }
+
+        if(exception instanceof UserDeactivatedException e){
             return Mono.just(List.of(
                     GraphqlErrorBuilder.newError(environment)
                             .message(e.getMessage())

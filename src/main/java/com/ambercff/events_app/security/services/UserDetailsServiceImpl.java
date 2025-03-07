@@ -1,6 +1,8 @@
 package com.ambercff.events_app.security.services;
 
+import com.ambercff.events_app.infra.exceptions.UserDeactivatedException;
 import com.ambercff.events_app.infra.exceptions.UserNotFoundException;
+import com.ambercff.events_app.models.User;
 import com.ambercff.events_app.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +18,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        User user = (User) userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        if(!user.getAtivo()){
+            throw new UserDeactivatedException("Usuário desativado! Por favor, ative-o novamente para fazer o login");
+        } else {
+            return userRepository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+        }
     }
 }

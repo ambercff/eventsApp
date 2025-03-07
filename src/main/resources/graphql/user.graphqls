@@ -2,6 +2,11 @@ extend type Query {
     getAllUsers: [UserDTO!]
 }
 
+extend type Mutation {
+    deactivateUser(email: String!): String!
+    reactivateUser(email: String!): String!
+}
+
 enum UserRole {
     ORGANIZADOR
     PARTICIPANTE

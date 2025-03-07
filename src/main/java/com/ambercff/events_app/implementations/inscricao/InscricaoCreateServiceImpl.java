@@ -2,6 +2,7 @@ package com.ambercff.events_app.implementations.inscricao;
 
 import com.ambercff.events_app.dtos.inscricao.InscricaoCreateDTO;
 import com.ambercff.events_app.infra.exceptions.EventNotFoundException;
+import com.ambercff.events_app.infra.exceptions.UserDeactivatedException;
 import com.ambercff.events_app.infra.exceptions.UserNotFoundException;
 import com.ambercff.events_app.models.Inscricao;
 import com.ambercff.events_app.models.User;
@@ -26,9 +27,16 @@ public class InscricaoCreateServiceImpl implements InscricaoCreateService {
 
     @Override
     public Inscricao createInscription(InscricaoCreateDTO data) {
+        User participante = (User) userRepository.findByEmail(data.email())
+                .orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!"));
+
+        if (!participante.getAtivo()) {
+            throw new UserDeactivatedException("Usuário inativo não pode realizar inscrições.");
+        }
+
         return inscricaoRepository.save(
                 Inscricao.builder()
-                        .participante((User) userRepository.findByEmail(data.email()).orElseThrow(() -> new UserNotFoundException("Usuário não encontrado!")))
+                        .participante(participante)
                         .evento(eventoRepository.findById(data.idEvento()).orElseThrow(() -> new EventNotFoundException("Evento não encontrado!")))
                         .statusInscricao(StatusInscricao.CONFIRMADA).build()
 
