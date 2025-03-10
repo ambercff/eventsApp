@@ -5,10 +5,7 @@ import com.ambercff.events_app.dtos.evento.EventoDTO;
 import com.ambercff.events_app.dtos.user.UserDTO;
 import com.ambercff.events_app.models.Evento;
 import com.ambercff.events_app.models.User;
-import com.ambercff.events_app.services.evento.EventoCreateService;
-import com.ambercff.events_app.services.evento.EventoDeleteService;
-import com.ambercff.events_app.services.evento.EventoGetAllService;
-import com.ambercff.events_app.services.evento.EventoSetOrganizadorService;
+import com.ambercff.events_app.services.evento.*;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,9 @@ public class EventoController {
 
     @Autowired
     EventoSetOrganizadorService eventoSetOrganizadorService;
+
+    @Autowired
+    EventoRemoveOrganizadorService eventoRemoveOrganizadorService;
 
     // POST
     @MutationMapping
@@ -76,6 +76,11 @@ public class EventoController {
     @MutationMapping
     public String setOrganizer(@Argument String email, @Argument String titulo){
         return eventoSetOrganizadorService.setOrganizadorService(email, titulo);
+    }
+
+    @MutationMapping
+    public String removeOrganizer(@Argument String email, @Argument String titulo){
+        return eventoRemoveOrganizadorService.removeOrganizador(email, titulo);
     }
 
 }
